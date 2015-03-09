@@ -3,9 +3,21 @@ This Module has been designed and initially coded on a computer without access t
 
 FAdmin Teamban
 FAdmin Unteamban
+
 DarkRP Change Name
 DarkRP Change Job (Title)
 DarkRP Change Job (Team)
+DarkRP Arrest
+DarkRP Unarrest
+DarkRP SetMoney
+DarkRP Make Wanted
+DarkRP Make Unwanted
+DarkRP Grant Warrant
+DarkRP Revoke Warrant
+DarkRP Force Payday
+
+Set Model
+Set Weapon Colour
 ]]--
 
 local CATAGORY_NAME = "DarkRP Integration"
