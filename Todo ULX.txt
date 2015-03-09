@@ -1,0 +1,22 @@
+Votes:
+
+VoteMute
+VoteGag
+VoteGimp
+VoteKick
+VoteBan
+
+
+Improvements:
+
+Gag
+    Perm
+    Temp
+    Regular (Until DC)
+    Ungag
+
+Mute
+    Perm
+    Temp
+    Regular
+    Unmute
