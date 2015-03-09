@@ -22,7 +22,7 @@ Set Weapon Colour
 
 local CATAGORY_NAME = "DarkRP Integration"
 
-if not GetConVarString("gamemode") == "darkrp" then then
+if not string.lower(GetConVarString("gamemode")) == "darkrp" then then
 	ULib.tsayError("Running DarkRP Module On Non-DarkRP Gamemode.")
 end
 
