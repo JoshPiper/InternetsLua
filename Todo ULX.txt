@@ -20,3 +20,18 @@ Mute
     Temp
     Regular
     Unmute
+
+DarkRP Intergration
+    Unarrest
+    Arrest
+    SetMoney
+    SetRPName
+    ForceName
+    AbortHit
+    SetTeam
+    SetJobTitle
+    Wanted
+    Unwanted
+    Warrant
+    Unwarrant
+    Force Payday
