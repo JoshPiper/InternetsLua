@@ -22,7 +22,7 @@ Set Weapon Colour
 
 local CATAGORY_NAME = "DarkRP Integration"
 
-if not string.lower(GetConVarString("gamemode")) == "darkrp" then then
+if not string.lower(GetConVarString("gamemode")) == "darkrp" then
 	ULib.tsayError("Running DarkRP Module On Non-DarkRP Gamemode.")
 end
 
@@ -94,3 +94,54 @@ updatejobcon:addParam{ type=ULib.cmds.PlayerArg, ULib.cmds.optional }
 updatejobcon:addParam{ type=ULib.cmds.StringArg }
 updatejobcon:defaultAccess( ULib.ACCESS_ADMIN )
 updatejobcon:help( "Changes the job title of the targeted player, using console commands." )
+
+------ FAdmin Teamban ------
+
+------ FAdmin Unteamban ------
+
+------ DarkRP Change Name ------
+function ulx.darkrp.changeName( calling_ply, target_ply, newName )
+	if not target_ply then
+		target_ply = calling_ply
+	end
+	if not newName then
+		ULib.tsayError("Name required for change.")
+		return
+	end
+	oldName = target_ply:Nick()
+	target_ply:setRPName(newname, false)
+	newName = target_ply:Nick()
+	if oldName == newName then
+		ULib.tsayError("Name failed to change")
+	else
+		ulx.fancyLogAdmin(calling_ply, "#A set the RP name of #T from #s to #s", target_ply, oldName, newName)
+	end
+end
+
+function ulx.darkrp.doChangeName2( allow, target_ply, name )
+	if allow then
+		oldname = target_ply:Nick()
+		target_ply:setRPName( name, false )
+		ulx.fancyLogAdmin( calling_ply, "#A set RP name of #T from #s to #s", target_ply, oldname, name )
+	else
+		ULib.tsayError("Name Selected Already In Use - Name Change Failed.")
+	end
+end
+local changename = ulx.command( CATEGORY_NAME, "ulx changename", ulx.darkrp.forceChangeName, "!changename" )
+changename:addParam{ type=ULib.cmds.PlayerArg, ULib.cmds.optional }
+changename:addParam{ type=ULib.cmds.StringArg }
+changename:defaultAccess( ULib.ACCESS_ADMIN )
+changename:help( "Attempts to change the name of the target." )
+DarkRP Change Job (Title)
+DarkRP Change Job (Team)
+DarkRP Arrest
+DarkRP Unarrest
+DarkRP SetMoney
+DarkRP Make Wanted
+DarkRP Make Unwanted
+DarkRP Grant Warrant
+DarkRP Revoke Warrant
+DarkRP Force Payday
+
+Set Model
+Set Weapon Colour
