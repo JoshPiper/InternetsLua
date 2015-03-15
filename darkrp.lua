@@ -118,21 +118,14 @@ function ulx.darkrp.changeName( calling_ply, target_ply, newName )
 	end
 end
 
-function ulx.darkrp.doChangeName2( allow, target_ply, name )
-	if allow then
-		oldname = target_ply:Nick()
-		target_ply:setRPName( name, false )
-		ulx.fancyLogAdmin( calling_ply, "#A set RP name of #T from #s to #s", target_ply, oldname, name )
-	else
-		ULib.tsayError("Name Selected Already In Use - Name Change Failed.")
-	end
-end
 local changename = ulx.command( CATEGORY_NAME, "ulx changename", ulx.darkrp.forceChangeName, "!changename" )
 changename:addParam{ type=ULib.cmds.PlayerArg, ULib.cmds.optional }
 changename:addParam{ type=ULib.cmds.StringArg }
 changename:defaultAccess( ULib.ACCESS_ADMIN )
 changename:help( "Attempts to change the name of the target." )
-DarkRP Change Job (Title)
+
+------ DarkRP Change Job (Title) ------
+
 DarkRP Change Job (Team)
 DarkRP Arrest
 DarkRP Unarrest
