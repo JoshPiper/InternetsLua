@@ -24,6 +24,8 @@ ammotypes[9] = "SMG Grenades"
 ammotypes[4] = "SMG Ammo"
 ammotypes[2] = "AR2 Secondary"
 
+ammoids = {3, 5, 1, 6, 10, 8, 7, 11, 9, 4, 2}
+
 ------ Strip Ammunition ------
 function ulx.stripAmmo( calling_ply, target_plys )
 	if not target_plys then
@@ -85,3 +87,21 @@ end
 local getammoid = ulx.command(CATEGORY_NAME, "ulx getammoid", ulx.getAmmoID, "!getammoid")
 getammoid:defaultAccess(ULib.ACCESS_SUPERADMIN)
 getammoid:help("Returns the numerical ammoID for the currently selected weapon (mainly for debug use).")
+
+------- Get Ammo Name ------
+function ulx.getAmmoName(calling_ply)
+	primary = ammotypes[calling_ply:GetActiveWeapon():GetPrimaryAmmoType()] or "Undefined (ID: "..tostring(calling_ply:GetActiveWeapon():GetPrimaryAmmoType())..")"
+	secondary = ammotypes[calling_ply:GetActiveWeapon():GetSecondaryAmmoType()] or "Undefined (ID: "..tostring(calling_ply:GetActiveWeapon():GetSecondaryAmmoType())..")"
+	if primary == "Undefined (ID: "..tostring(calling_ply:GetActiveWeapon():GetPrimaryAmmoType())..")" and calling_ply:GetActiveWeapon():GetPrimaryAmmoType() == -1 then
+		primary = "Nil"
+	end
+	if secondary == "Undefined (ID: "..tostring(calling_ply:GetActiveWeapon():GetSecondaryAmmoType())..")" and calling_ply:GetActiveWeapon():GetSecondaryAmmoType() == -1 then
+		secondary = "Nil"
+	end
+	ULib.tsay(calling_ply, "---- "..calling_ply:GetActiveWeapon():GetClass().." ----")
+	ULib.tsay(calling_ply, "Primary Ammo: "..primary)
+	ULib.tsay(calling_ply, "Secondary Ammo: "..secondary)
+end
+local getammoname = ulx.command(CATEGORY_NAME, "ulx getammoname", ulx.getAmmoName, "!getammoname")
+getammoname:defaultAccess(ULib.ACCESS_SUPERADMIN)
+getammoname:help("Returns the name for the ammos of the currently selected weapon (or undefined) - Mostly for debug use.")
