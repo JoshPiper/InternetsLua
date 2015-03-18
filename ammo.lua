@@ -2,11 +2,13 @@
 ULX Ammo/Weapons Module
 	Unlimited Ammo
 	Set Ammo Amount
-	Set Current Ammo
+	--Set Current Ammo
 	--Strip Ammo
 	Strip Weapons
 	Strip Current Weapon
 	Force Drop Weapon
+	--Get Ammo ID
+	--Get Ammo Name
 ]]--
 
 local CATEGORY_NAME = "Ammo"
@@ -58,14 +60,14 @@ function ulx.setCurrentAmmo(calling_ply, target_ply, amount, secondary)
 	if not secondary then
 		if ammotypes[target_ply:GetActiveWeapon():GetPrimaryAmmoType()] ~= nil then
 			target_ply:SetAmmo(amount, target_ply:GetActiveWeapon():GetPrimaryAmmoType())
-				ulx.fancyLogAdmin(calling_ply, "#A set #s of #T to #s", ammotypes[target_ply:GetActiveWeapon():GetPrimaryAmmoType()], target_ply, amount)
+				ulx.fancyLogAdmin(calling_ply, "#A set ammotype #s (#s) of #T to #s", target_ply:GetActiveWeapon():GetPrimaryAmmoType(), ammotypes[target_ply:GetActiveWeapon():GetPrimaryAmmoType()], target_ply, amount)
 			else
 				ULib.tsayError(calling_ply, "No Primary Ammo Type Defined - Try Secondary?", true)
 			end
 		else
 			if ammotypes[target_ply:GetActiveWeapon():GetSecondaryAmmoType()] ~= nil then
 				target_ply:SetAmmo(amount, target_ply:GetActiveWeapon():GetSecondaryAmmoType())
-				ulx.fancyLogAdmin(calling_ply, "#A set #s of #T to #s", ammotypes[target_ply:GetActiveWeapon():GetSecondaryAmmoType()], target_ply, amount)
+				ulx.fancyLogAdmin(calling_ply, "#A set ammotype #s (#s) of #T to #s",target_ply:GetActiveWeapon():GetSecondaryAmmoType() ,ammotypes[target_ply:GetActiveWeapon():GetSecondaryAmmoType()], target_ply, amount)
 			else
 				ULib.tsayError(calling_ply, "No Secondary Ammo Type Defined - Try Primary?", true)
 			end
