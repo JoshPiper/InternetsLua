@@ -23,6 +23,7 @@ ammotypes[11] = "SLAM Explosives"
 ammotypes[9] = "SMG Grenades"
 ammotypes[4] = "SMG Ammo"
 ammotypes[2] = "AR2 Secondary"
+
 ------ Strip Ammunition ------
 function ulx.stripAmmo( calling_ply, target_plys )
 	if not target_plys then
@@ -47,18 +48,30 @@ stripam:defaultAccess( ULib.ACCESS_ADMIN )
 stripam:help( "Strips the ammo from target player(s)." )
 
 ------ Set Current Ammo ------
-function ulx.setCurrentAmmo (calling_ply, target_plys, amount)
-	if not target_plys then
-		target_plys = {}
-		table.insert(target_plys, calling_ply)
-	end
+function ulx.setCurrentAmmo(calling_ply, target_ply, amount, secondary)
 	local affected_plys = {}
-	for i = 1, #target_plys do
-		local v = target_plys[i]
-		v:GetActiveWeapon():SetAmmo(amount)
+	if not target_ply then
+		target_ply = calling_ply
 	end
-end
-local stripamd = ulx.command( CATEGORY_NAME, "ulx stripammod", ulx.setCurrentAmmo, "!stripammod" )
-stripamd:addParam{ type=ULib.cmds.PlayersArg, ULib.cmds.optional }
+	if not secondary then
+		if ammotypes[target_ply:GetActiveWeapon():GetPrimaryAmmoType()] ~= nil then
+			target_ply:SetAmmo(amount, target_ply:GetActiveWeapon():GetPrimaryAmmoType())
+				ulx.fancyLogAdmin(calling_ply, "#A set #s of #T to #s", ammotypes[target_ply:GetActiveWeapon():GetPrimaryAmmoType()], target_ply, amount)
+			else
+				ULib.tsayError(calling_ply, "No Primary Ammo Type Defined - Try Secondary?", true)
+			end
+		else
+			if ammotypes[target_ply:GetActiveWeapon():GetSecondaryAmmoType()] ~= nil then
+				target_ply:SetAmmo(amount, target_ply:GetActiveWeapon():GetSecondaryAmmoType())
+				ulx.fancyLogAdmin(calling_ply, "#A set #s of #T to #s", ammotypes[target_ply:GetActiveWeapon():GetSecondaryAmmoType()], target_ply, amount)
+			else
+				ULib.tsayError(calling_ply, "No Secondary Ammo Type Defined - Try Primary?", true)
+			end
+		end
+	end
+local stripamd = ulx.command( CATEGORY_NAME, "ulx setcurrentammo", ulx.setCurrentAmmo, "!setcurrentammo" )
+stripamd:addParam{ type=ULib.cmds.PlayerArg, ULib.cmds.optional }
+stripamd:addParam{ type=ULib.cmds.NumArg, min=0, hint="Amount" }
+stripamd:addParam{ type=ULib.cmds.BoolArg, hint="Set Secondary Ammo", ULib.cmds.optional }
 stripamd:defaultAccess( ULib.ACCESS_ADMIN )
-stripamd:help( "Strips the ammo from target player(s)." )
+stripamd:help( "Sets the ammo for the currently selected weapon for targeted player(s)." )
