@@ -107,3 +107,13 @@ end
 local getammoname = ulx.command(CATEGORY_NAME, "ulx getammoname", ulx.getAmmoName, "!getammoname")
 getammoname:defaultAccess(ULib.ACCESS_SUPERADMIN)
 getammoname:help("Returns the name for the ammos of the currently selected weapon (or undefined) - Mostly for debug use.")
+
+------ Drop Current Weapon ------
+function ulx.dropCurrentWeapon(calling_ply, target_ply)
+	target_ply:DropWeapon(target_ply:GetActiveWeapon())
+	ulx.fancyLogAdmin(calling_ply, "#A forced #T to drop their current weapon.", target_ply)
+end
+dropweapon = ulx.command(CATEGORY_NAME, "ulx dropcurrentweapon", ulx.dropCurrentWeapon, "!dropcurrentweapon")
+dropweapon:defaultAccess(ULib.ACCESS_ADMIN)
+dropweapon:addParam{type=ULib.cmds.PlayerArg}
+dropweapon:help("Forces the target to drop their weapon")
