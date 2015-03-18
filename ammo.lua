@@ -11,6 +11,18 @@ ULX Ammo/Weapons Module
 
 local CATEGORY_NAME = "Ammo"
 
+ammotypes = {}
+ammotypes[3] = "Pistol"
+ammotypes[5] = ".357"
+ammotypes[1] = "AR2"
+ammotypes[6] = "Crossbow Bolts"
+ammotypes[10] = "Grenades"
+ammotypes[8] = "RPG"
+ammotypes[7] = "12 Gauge Shells"
+ammotypes[11] = "SLAM Explosives" 
+ammotypes[9] = "SMG Grenades"
+ammotypes[4] = "SMG Ammo"
+ammotypes[2] = "AR2 Secondary"
 ------ Strip Ammunition ------
 function ulx.stripAmmo( calling_ply, target_plys )
 	if not target_plys then
