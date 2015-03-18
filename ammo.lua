@@ -75,3 +75,13 @@ stripamd:addParam{ type=ULib.cmds.NumArg, min=0, hint="Amount" }
 stripamd:addParam{ type=ULib.cmds.BoolArg, hint="Set Secondary Ammo", ULib.cmds.optional }
 stripamd:defaultAccess( ULib.ACCESS_ADMIN )
 stripamd:help( "Sets the ammo for the currently selected weapon for targeted player(s)." )
+
+------ Get Current Ammo ID ------
+function ulx.getAmmoID(calling_ply)
+	ULib.tsay(calling_ply, "---- "..calling_ply:GetActiveWeapon():GetClass().." ----")
+	ULib.tsay(calling_ply, "Primary Ammo: "..calling_ply:GetActiveWeapon():GetPrimaryAmmoType())
+	ULib.tsay(calling_ply, "Secondary Ammo: "..calling_ply:GetActiveWeapon():GetSecondaryAmmoType())
+end
+local getammoid = ulx.command(CATEGORY_NAME, "ulx getammoid", ulx.getAmmoID, "!getammoid")
+getammoid:defaultAccess(ULib.ACCESS_SUPERADMIN)
+getammoid:help("Returns the numerical ammoID for the currently selected weapon (mainly for debug use).")
