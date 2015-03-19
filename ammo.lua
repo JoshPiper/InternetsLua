@@ -6,7 +6,8 @@ ULX Ammo/Weapons Module
 	--Strip Ammo
 	Strip Weapons
 	Strip Current Weapon
-	Force Drop Weapon
+	--Force Drop Weapon
+	--Force Drop Weapons
 	--Get Ammo ID
 	--Get Ammo Name
 ]]--
@@ -117,3 +118,15 @@ dropweapon = ulx.command(CATEGORY_NAME, "ulx dropcurrentweapon", ulx.dropCurrent
 dropweapon:defaultAccess(ULib.ACCESS_ADMIN)
 dropweapon:addParam{type=ULib.cmds.PlayerArg}
 dropweapon:help("Forces the target to drop their weapon")
+
+------ Drop All Weapons ------
+function ulx.dropAllWeapons(calling_ply, target_ply)
+	for _, i in pairs(target_ply:GetWeapons()) do
+		target_ply:DropWeapon(i)
+	end
+	ulx.fancyLogAdmin(calling_ply, "#A forced #T to drop all their weapons.", target_ply)
+end
+dropweapons = ulx.command(CATEGORY_NAME, "ulx dropweapons", ulx.dropAllWeapons, "!dropweapons")
+dropweapons:defaultAccess(ULib.ACCESS_ADMIN)
+dropweapons:addParam{type=ULib.cmds.PlayerArg}
+dropweapons:help("Forces the target to drop all their weapons.")
