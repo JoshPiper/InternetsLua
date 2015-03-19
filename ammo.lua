@@ -1,11 +1,11 @@
 --[[
 ULX Ammo/Weapons Module
-	Unlimited Ammo
-	Set Ammo Amount
+	Unlimited Ammo - Setting, Hook, Reset on unset?
+	--Set Ammo Amount
 	--Set Current Ammo
 	--Strip Ammo
-	Strip Weapons
-	Strip Current Weapon
+	--Strip Weapons
+	--Strip Current Weapon
 	--Force Drop Weapon
 	--Force Drop Weapons
 	--Get Ammo ID
@@ -14,10 +14,10 @@ ULX Ammo/Weapons Module
 
 local CATEGORY_NAME = "Ammo"
 
-ammotypes = {}
-ammotypes[1] = "AR2"
-ammotypes[2] = "Combine Balls"
-ammotypes[3] = "Pistol"
+ammotypes = {} -- Setting the ammotypes table, referenced in several functions.
+ammotypes[1] = "AR2" -- In GMod, ammoID 1 is the AR2 ammo.
+ammotypes[2] = "Combine Balls" -- ID 2 are combine balls.
+ammotypes[3] = "Pistol" -- And so on.
 ammotypes[4] = "SMG Ammo"
 ammotypes[5] = ".357"
 ammotypes[6] = "Crossbow Bolts"
@@ -27,30 +27,30 @@ ammotypes[9] = "SMG Grenades"
 ammotypes[10] = "Grenades"
 ammotypes[11] = "SLAM Explosives" 
 
-ammoids = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
+ammoids = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} -- List of the ammoID, if we get say, ammoID 11 then the next one is 13.
 
 ------ Strip Ammunition ------
-function ulx.stripAmmo( calling_ply, target_plys )
-	if not target_plys then
-		target_plys = {}
-		table.insert(target_plys, calling_ply)
+function ulx.stripAmmo(calling_ply, target_plys) -- Defining a function
+	if not target_plys then -- If the admin didn't specifiy a player.
+		target_plys = {} -- Make a new, blank table.
+		table.insert(target_plys, calling_ply) -- And insert the calling player into it.
+	end -- End the if statement.
+		local affected_plys = {} -- Currently, we have affected no players.
+	for i = 1, #target_plys do -- For every targeteted player.
+		local v = target_plys[i] -- Make it set (ease of access, though we could just reference target_plys[i]
+		v:StripAmmo() -- Strip the player's ammo.
+		for _, i in pairs(v:GetWeapons()) do -- Bug fix, since stripammo doesn't count clips as ammo.
+			i:SetClip1(0) -- Set the primary
+			i:SetClip2(0) -- And secondary clips to 0.
+		end -- :(
+		table.insert(affected_plys, v) -- We affected someone.
 	end
-		local affected_plys = {}
-	for i = 1, #target_plys do
-		local v = target_plys[ i ]
-		v:StripAmmo()
-		for _, i in pairs(v:GetWeapons()) do
-			i:SetClip1(0)
-			i:SetClip2(0)
-		end
-		table.insert( affected_plys, v )
-	end
-	ulx.fancyLogAdmin( calling_ply, "#A stripped ammo from #T", affected_plys )
+	ulx.fancyLogAdmin(calling_ply, "#A stripped ammo from #T", affected_plys) -- Call out the abusers.
 end
-local stripam = ulx.command( CATEGORY_NAME, "ulx stripammo", ulx.stripAmmo, "!stripammo" )
-stripam:addParam{ type=ULib.cmds.PlayersArg, ULib.cmds.optional }
-stripam:defaultAccess( ULib.ACCESS_ADMIN )
-stripam:help( "Strips the ammo from target player(s)." )
+local stripam = ulx.command(CATEGORY_NAME, "ulx stripammo", ulx.stripAmmo, "!stripammo") -- Make a new command.
+stripam:addParam{type=ULib.cmds.PlayersArg, ULib.cmds.optional} -- Since we have it able to target the caller, we don't NEED a player argument.
+stripam:defaultAccess(ULib.ACCESS_ADMIN) -- Only admins can abuse this.
+stripam:help( "Strips the ammo from target player(s)." ) -- And since admins are dumb, we tell them what it does.
 
 ------ Set Current Ammo ------
 function ulx.setCurrentAmmo(calling_ply, target_ply, amount, secondary)
@@ -111,16 +111,22 @@ getammoname:help("Returns the name for the ammos of the currently selected weapo
 
 ------ Drop Current Weapon ------
 function ulx.dropCurrentWeapon(calling_ply, target_ply)
+	if not target_ply then
+		target_ply = calling_ply
+	end
 	target_ply:DropWeapon(target_ply:GetActiveWeapon())
 	ulx.fancyLogAdmin(calling_ply, "#A forced #T to drop their current weapon.", target_ply)
 end
 dropweapon = ulx.command(CATEGORY_NAME, "ulx dropcurrentweapon", ulx.dropCurrentWeapon, "!dropcurrentweapon")
 dropweapon:defaultAccess(ULib.ACCESS_ADMIN)
-dropweapon:addParam{type=ULib.cmds.PlayerArg}
+dropweapon:addParam{type=ULib.cmds.PlayerArg, ULib.cmds.optional}
 dropweapon:help("Forces the target to drop their weapon")
 
 ------ Drop All Weapons ------
 function ulx.dropAllWeapons(calling_ply, target_ply)
+	if not target_ply then
+		target_ply = calling_ply
+	end
 	for _, i in pairs(target_ply:GetWeapons()) do
 		target_ply:DropWeapon(i)
 	end
@@ -128,5 +134,68 @@ function ulx.dropAllWeapons(calling_ply, target_ply)
 end
 dropweapons = ulx.command(CATEGORY_NAME, "ulx dropweapons", ulx.dropAllWeapons, "!dropweapons")
 dropweapons:defaultAccess(ULib.ACCESS_ADMIN)
-dropweapons:addParam{type=ULib.cmds.PlayerArg}
+dropweapons:addParam{type=ULib.cmds.PlayerArg, ULib.cmds.optional}
 dropweapons:help("Forces the target to drop all their weapons.")
+
+------- Strip All Weapons ------
+function ulx.stripWeapons(calling_ply, target_ply)
+	if not target_ply then
+		target_ply = calling_ply
+	end
+	target_ply:StripWeapons()
+	ulx.fancyLogAdmin(calling_ply, "#A stripped weapons from #T.", target_ply)
+end
+stripweapons = ulx.command(CATEGORY_NAME, "ulx strip", ulx.stripWeapons, "!strip")
+stripweapons:defaultAccess(ULib.ACCESS_ADMIN)
+stripweapons:addParam{type=ULib.cmds.PlayerArg, ULib.cmds.optional}
+stripweapons:help("Strips weapons from the target.")
+
+------ Strip Current Weapon ------
+function ulx.stripWeapon(calling_ply, target_ply)
+	if not target_ply then
+		target_ply = calling_ply
+	end
+	
+	target_ply:StripWeapon(target_ply:GetActiveWeapon():GetClass())
+	ulx.fancyLogAdmin(calling_ply, "#A stripped the current weapon from #T.", target_ply)
+end
+stripweapon = ulx.command(CATEGORY_NAME, "ulx stripcurrent", ulx.stripWeapon, "!stripcurrent")
+stripweapon:defaultAccess(ULib.ACCESS_ADMIN)
+stripweapon:addParam{type=ULib.cmds.PlayerArg, ULib.cmds.optional}
+stripweapon:help("Strips weapons from the target.")
+
+------ Set Ammo ------
+function ulx.setAmmoHelper(calling_ply)
+	ULib.tsay(calling_ply, "------ Ammo Types -------", true)
+	for i = 1, #ammoids do
+		ULib.tsay(calling_ply, ammoids[i]..": "..ammotypes[ammoids[i]], true)
+	end
+end
+gettypes = ulx.command(CATEGORY_NAME, "ulx getammotypes", ulx.setAmmoHelper, "!getammotypes")
+gettypes:defaultAccess(ULib.ACCESS_ADMIN)
+gettypes:help("Returns ammo types.")
+
+function ulx.setAmmo(calling_ply, target_ply, ammo, amount)
+	if not target_ply then
+		target_ply = calling_ply
+	end
+	local isValidAmmo = false
+	for i = 1, #ammoids do
+		if ammo == ammoids[i] then
+			isValidAmmo = true
+		end
+	end
+	if not isValidAmmo then
+		ULib.tsayError(calling_ply, "Ammotype not defined.")
+	else
+	target_ply:SetAmmo(amount, ammo)
+	ulx.fancyLogAdmin(calling_ply, "#A set ammotype #s (#s) to #s for #T", ammo, ammotypes[ammo], amount, target_ply)
+	end
+end
+setammo = ulx.command(CATEGORY_NAME, "ulx setammoall", ulx.setAmmo, "!setammoall")
+setammo:defaultAccess(ULib.ACCESS_ADMIN)
+setammo:addParam{type=ULib.cmds.PlayerArg, ULib.cmds.optional}
+setammo:addParam{type=ULib.cmds.NumArg, min=0, hint="AmmoID"}
+setammo:addParam{type=ULib.cmds.NumArg, min=0, hint="Amount"}
+setammo:help("Returns ammo types.")
+	
